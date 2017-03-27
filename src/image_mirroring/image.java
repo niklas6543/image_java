@@ -1,6 +1,7 @@
 package image_mirroring;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,13 +19,19 @@ public class image {
 				};
 		//mirroring(test);
 		
-		System.out.println(loadImage(""));
+		System.out.println(loadImage("img/streifen.jpg"));
 	}
 	
 	public static BufferedImage loadImage(String filename){
 		BufferedImage img = null;
 		try {
-		    //img = ImageIO.read(new File(filename));
+			//read image data from file
+		    img = ImageIO.read(new File(filename));
+		    //get pixels
+		    byte[] pixels = ((DataBufferByte)img.getRaster().getDataBuffer()).getData();
+		    
+		    System.out.println(img.getWidth() + " x " + img.getHeight());
+		    System.out.println(pixels[1000]);
 		    //img = ImageIO.read((getClass().getResourceAsStream(filename)));
 		} catch (IOException e) {
 			System.out.println("cant load image");
