@@ -18,7 +18,7 @@ public class image {
 					{10,11,12},
 				};
 		
-		saveImage(mirroringImage(loadImage("img/ax7.png")));
+		saveImage(mirroringImage(loadImage("img/streifen.jpg")));
 	}
 	
 	public static BufferedImage loadImage(String filename){
