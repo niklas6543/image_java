@@ -17,9 +17,8 @@ public class image {
 					{7,8,9},
 					{10,11,12},
 				};
-		//mirroring(test);
 		
-		System.out.println(loadImage("img/streifen.jpg"));
+		saveImage(mirroringImage(loadImage("img/ax7.png")));
 	}
 	
 	public static BufferedImage loadImage(String filename){
@@ -27,17 +26,49 @@ public class image {
 		try {
 			//read image data from file
 		    img = ImageIO.read(new File(filename));
-		    //get pixels
-		    byte[] pixels = ((DataBufferByte)img.getRaster().getDataBuffer()).getData();
 		    
-		    System.out.println(img.getWidth() + " x " + img.getHeight());
-		    System.out.println(pixels[1000]);
+		   
+		    //get pixels
+		    //byte[] pixels = ((DataBufferByte)img.getRaster().getDataBuffer()).getData();
+		    //System.out.println(img.getWidth() + " x " + img.getHeight());
 		    //img = ImageIO.read((getClass().getResourceAsStream(filename)));
 		} catch (IOException e) {
 			System.out.println("cant load image");
 		}
 		return img;
 	}
+	
+	public static void saveImage(BufferedImage img){
+		try {
+			//create and save the mirroring image
+			ImageIO.write(img, "jpg", new File("img/mirror.jpg")); 
+		} catch (IOException e) {
+			System.out.println("cant save image");
+		}
+		
+		System.out.println("the image mirroring was succesfully");
+	}
+	
+	public static BufferedImage mirroringImage(BufferedImage simg){
+		//create empty image with sizes from the original
+		BufferedImage mimg = new BufferedImage(simg.getWidth(), simg.getHeight(), simg.getType());
+		
+		for (int y = 0; y < simg.getHeight(); y++) {
+			//go from right an left into the middle [->|<-]
+			for (int leftX = 0,  rightX = simg.getWidth()-1; leftX < simg.getWidth(); leftX++, rightX-- ) {
+				//change the right and left pixel colors
+				int pixelColorR = simg.getRGB(rightX, y);
+				int pixelColorL = simg.getRGB(leftX, y);
+				mimg.setRGB(leftX, y, pixelColorR);
+				mimg.setRGB(rightX, y, pixelColorL);
+			}
+		}
+		
+		return mimg;
+	}
+	
+	
+	
 	
 	public static void arrayMirroing(int a[]){
 		int h;
