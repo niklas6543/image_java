@@ -8,17 +8,13 @@ import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
+
 public class image {
+	static char who = 'x';
 	public static void main(String args[]){
-		int[][] test = new int[][]
-				{
-					{1,2,3},
-					{4,5,6},
-					{7,8,9},
-					{10,11,12},
-				};
+		BufferedImage img = loadImage("img/jo.jpg");
 		
-		saveImage(mirroringImage(loadImage("img/streifen.jpg")));
+		saveImage(mirroringImage(img, getImage2D(img)));
 	}
 	
 	public static BufferedImage loadImage(String filename){
@@ -26,12 +22,6 @@ public class image {
 		try {
 			//read image data from file
 		    img = ImageIO.read(new File(filename));
-		    
-		   
-		    //get pixels
-		    //byte[] pixels = ((DataBufferByte)img.getRaster().getDataBuffer()).getData();
-		    //System.out.println(img.getWidth() + " x " + img.getHeight());
-		    //img = ImageIO.read((getClass().getResourceAsStream(filename)));
 		} catch (IOException e) {
 			System.out.println("cant load image");
 		}
@@ -49,41 +39,67 @@ public class image {
 		System.out.println("the image mirroring was succesfully");
 	}
 	
-	public static BufferedImage mirroringImage(BufferedImage simg){
+	public static int[][] getImage2D(BufferedImage img){
+		
+		int[][] img2D = null;
+		switch (who) {
+		case 'y':
+			img2D = new int[img.getHeight()][img.getWidth()];
+			for (int y = 0; y < img.getHeight(); y++) {
+				for (int x = 0; x < img.getWidth(); x++) {
+					img2D[y][x] = img.getRGB(x, y);
+				}
+			}
+			break;
+		case 'x':
+			img2D = new int[img.getWidth()][img.getHeight()];
+			for (int x = 0; x < img.getWidth(); x++) {
+				for (int y = 0; y < img.getHeight(); y++) {
+					img2D[x][y] = img.getRGB(x, y);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+		
+		
+		return img2D;
+		
+	}
+	
+	public static BufferedImage mirroringImage(BufferedImage simg, int[][] img2D){
 		//create empty image with sizes from the original
 		BufferedImage mimg = new BufferedImage(simg.getWidth(), simg.getHeight(), simg.getType());
 		
-		for (int y = 0; y < simg.getHeight(); y++) {
-			//go from right an left into the middle [->|<-]
-			for (int leftX = 0,  rightX = simg.getWidth()-1; leftX < simg.getWidth(); leftX++, rightX-- ) {
-				//change the right and left pixel colors
-				int pixelColorR = simg.getRGB(rightX, y);
-				int pixelColorL = simg.getRGB(leftX, y);
-				mimg.setRGB(leftX, y, pixelColorR);
-				mimg.setRGB(rightX, y, pixelColorL);
+		switch (who) {
+		case 'y':
+			for (int y = 0; y < img2D.length; y++) {
+				//go from right an left into the middle [->|<-]
+				for (int leftX = 0,  rightX = img2D[y].length-1; leftX < img2D[y].length; leftX++, rightX-- ) {
+					mimg.setRGB(leftX, y, img2D[y][rightX]);
+					mimg.setRGB(rightX, y, img2D[y][leftX]);
+				}
 			}
+			break;
+		case 'x':
+			for (int x = 0; x < img2D.length; x++) {
+				//go from right an left into the middle [->|<-]
+				for (int bottonY = 0,  topY = img2D[x].length-1; bottonY < img2D[x].length; bottonY++, topY-- ) {
+					mimg.setRGB(x, bottonY, img2D[x][topY]);
+					mimg.setRGB(x, topY, img2D[x][bottonY]);
+				}
+			}
+			break;
+		case 'd':
+			
+			break;
+		default:
+			break;
 		}
 		
 		return mimg;
+		
 	}
 	
-	
-	
-	
-	public static void arrayMirroing(int a[]){
-		int h;
-		for (int i = 1; i < a.length; i++) {
-			h = a[i-1];
-			a[i-1] = a[a.length-i];
-			a[a.length-i] = h;
-		}
-	}
-	
-	public static void mirroring(int[][] a){
-		for (int i = 0; i < a.length; i++) {
-			//System.out.println(Arrays.toString(a[i]));
-			arrayMirroing(a[i]);
-			System.out.println(Arrays.toString(a[i]));			
-		}
-	}
 }
