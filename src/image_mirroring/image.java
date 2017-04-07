@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 public class image {
 	static char who = 'x';
 	public static void main(String args[]){
-		BufferedImage img = loadImage("img/jo.jpg");
+		BufferedImage img = loadImage("img/ax7.png");
 		
 		saveImage(mirroringImage(img, getImage2D(img)));
 	}
@@ -22,6 +22,7 @@ public class image {
 		try {
 			//read image data from file
 		    img = ImageIO.read(new File(filename));
+		    System.out.println("load image");
 		} catch (IOException e) {
 			System.out.println("cant load image");
 		}
@@ -59,6 +60,14 @@ public class image {
 				}
 			}
 			break;
+		case 'd':
+			img2D = new int[img.getHeight()][img.getWidth()];
+			for (int y = 0; y < img.getHeight(); y++) {
+				for (int x = 0; x < img.getWidth(); x++) {
+					img2D[y][x] = img.getRGB(x, y);
+				}
+			}
+			break;
 		default:
 			break;
 		}
@@ -72,10 +81,11 @@ public class image {
 		//create empty image with sizes from the original
 		BufferedImage mimg = new BufferedImage(simg.getWidth(), simg.getHeight(), simg.getType());
 		
+		
 		switch (who) {
 		case 'y':
 			for (int y = 0; y < img2D.length; y++) {
-				//go from right an left into the middle [->|<-]
+				//go from right and left into the middle [->|<-]
 				for (int leftX = 0,  rightX = img2D[y].length-1; leftX < img2D[y].length; leftX++, rightX-- ) {
 					mimg.setRGB(leftX, y, img2D[y][rightX]);
 					mimg.setRGB(rightX, y, img2D[y][leftX]);
@@ -84,7 +94,6 @@ public class image {
 			break;
 		case 'x':
 			for (int x = 0; x < img2D.length; x++) {
-				//go from right an left into the middle [->|<-]
 				for (int bottonY = 0,  topY = img2D[x].length-1; bottonY < img2D[x].length; bottonY++, topY-- ) {
 					mimg.setRGB(x, bottonY, img2D[x][topY]);
 					mimg.setRGB(x, topY, img2D[x][bottonY]);
@@ -92,7 +101,12 @@ public class image {
 			}
 			break;
 		case 'd':
-			
+			mimg = new BufferedImage(simg.getHeight(), simg.getWidth(), simg.getType());
+			for (int y = 0; y < img2D.length; y++) {
+				for (int x = 0; x < img2D[y].length; x++) {
+					mimg.setRGB(y, x, img2D[img2D.length-1-y][x]);
+				}
+			}
 			break;
 		default:
 			break;
