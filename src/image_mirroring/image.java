@@ -10,9 +10,10 @@ import javax.imageio.ImageIO;
 
 
 public class image {
-	static char who = 'x';
+	//change mirroring condition
+	static char how = 'y';
 	public static void main(String args[]){
-		BufferedImage img = loadImage("img/ax7.png");
+		BufferedImage img = loadImage("img/IMG_5432.JPG");
 		
 		saveImage(mirroringImage(img, getImage2D(img)));
 	}
@@ -43,7 +44,7 @@ public class image {
 	public static int[][] getImage2D(BufferedImage img){
 		
 		int[][] img2D = null;
-		switch (who) {
+		switch (how) {
 		case 'y':
 			img2D = new int[img.getHeight()][img.getWidth()];
 			for (int y = 0; y < img.getHeight(); y++) {
@@ -60,11 +61,19 @@ public class image {
 				}
 			}
 			break;
-		case 'd':
+		case 'r':
 			img2D = new int[img.getHeight()][img.getWidth()];
 			for (int y = 0; y < img.getHeight(); y++) {
 				for (int x = 0; x < img.getWidth(); x++) {
 					img2D[y][x] = img.getRGB(x, y);
+				}
+			}
+			break;
+		case 'l':
+			img2D = new int[img.getWidth()][img.getHeight()];
+			for (int x = 0; x < img.getWidth(); x++) {
+				for (int y = 0; y < img.getHeight(); y++) {
+					img2D[x][y] = img.getRGB(x, y);
 				}
 			}
 			break;
@@ -82,7 +91,7 @@ public class image {
 		BufferedImage mimg = new BufferedImage(simg.getWidth(), simg.getHeight(), simg.getType());
 		
 		
-		switch (who) {
+		switch (how) {
 		case 'y':
 			for (int y = 0; y < img2D.length; y++) {
 				//go from right and left into the middle [->|<-]
@@ -100,7 +109,7 @@ public class image {
 				}
 			}
 			break;
-		case 'd':
+		case 'r':
 			mimg = new BufferedImage(simg.getHeight(), simg.getWidth(), simg.getType());
 			for (int y = 0; y < img2D.length; y++) {
 				for (int x = 0; x < img2D[y].length; x++) {
@@ -108,6 +117,13 @@ public class image {
 				}
 			}
 			break;
+		case 'l':
+			mimg = new BufferedImage(simg.getHeight(), simg.getWidth(), simg.getType());
+			for (int x = 0; x < img2D.length; x++) {
+				for (int y = 0; y < img2D[x].length; y++) {
+					mimg.setRGB(y, x, img2D[img2D.length-1-x][y]);
+				}
+			}
 		default:
 			break;
 		}
