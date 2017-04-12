@@ -94,7 +94,7 @@ public class image {
 		switch (how) {
 		case 'y':
 			for (int y = 0; y < img2D.length; y++) {
-				//go from right and left into the middle [->|<-]
+				//go from right and left to the middle [->|<-]
 				for (int leftX = 0,  rightX = img2D[y].length-1; leftX < img2D[y].length; leftX++, rightX-- ) {
 					mimg.setRGB(leftX, y, img2D[y][rightX]);
 					mimg.setRGB(rightX, y, img2D[y][leftX]);
